@@ -109,4 +109,43 @@ public class Dao {
 		}
 		return asiakkaat;
 	}
+	
+	public boolean addItem(Asiakas asiakas) {
+		boolean lisatty = false;
+		try {
+			con = yhdista();
+			if (con != null) {
+				stmtPrep = con.prepareStatement("INSERT INTO asiakkaat (etunimi, sukunimi, puhelin, sposti) VALUES (?, ?, ?, ?)");
+				stmtPrep.setString(1, asiakas.getEtunimi());
+				stmtPrep.setString(2, asiakas.getSukunimi());
+				stmtPrep.setString(3, asiakas.getPuhelin());
+				stmtPrep.setString(4, asiakas.getSposti());
+				stmtPrep.executeUpdate();
+				lisatty = true;
+			}			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			sulje();
+		}
+		return lisatty;
+	}
+	
+	public boolean removeItem(int id) {
+		boolean poistettu = false;
+		try {
+			con = yhdista();
+			if (con != null) {
+				stmtPrep = con.prepareStatement("DELETE FROM asiakkaat WHERE asiakas_id=?");
+				stmtPrep.setInt(1, id);
+				stmtPrep.executeUpdate();
+				poistettu = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			sulje();
+		}
+		return poistettu;
+	}
 }

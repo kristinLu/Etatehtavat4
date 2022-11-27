@@ -12,8 +12,11 @@
 <table id="asiakkaat">
 	<thead>
 		<tr>
-			<th id="label" colspan="2">Hakusana:</th>
-			<th><input type="text" id="hakusana"></th>
+			<th class="oikea" colspan="5"><a href="lisaaasiakas.jsp">Lisää uusi asiakas</a></th>
+		</tr>
+		<tr>
+			<th class="oikea" colspan="2">Hakusana:</th>
+			<th colspan="2"><input type="text" id="hakusana"></th>
 			<th><input type="button" value="Hae" id="hakunappi" onclick="haeAsiakkaat()"></th>
 		</tr>
 		<tr>
@@ -21,6 +24,7 @@
 			<th>Sukunimi</th>
 			<th>Puhelin</th>
 			<th>Sposti</th>
+			<th></th>
 		</tr>
 	</thead>
 	<tbody id="tiedot"></tbody>

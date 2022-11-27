@@ -25,6 +25,17 @@ table, th, td {
 
 tr:nth-child(even) {background-color: #f0f0f0;}
 
-#label {
+a {
+	color: #ffffff;
+	text-decoration: none;
+}
+
+.oikea {
 	text-align: right;
+}
+
+#poista {
+	color: #ff0000;
+	text-decoration: underline;
+	cursor: pointer;
 }
