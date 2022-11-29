@@ -28,13 +28,24 @@ public class Asiakkaat extends HttpServlet {
 		Dao dao = new Dao();
 		ArrayList<Asiakas> asiakkaat;
 		String hakusana = request.getParameter("hakusana");
-		if (!hakusana.equals("")) {
-			asiakkaat = dao.getAllItems(hakusana);
+		String asiakas_id = request.getParameter("asiakas_id");
+		String strJSON = "";
+		if (hakusana != null) {
+			if (!hakusana.equals("")) {
+				asiakkaat = dao.getAllItems(hakusana);
+			} else {
+				asiakkaat = dao.getAllItems();
+			}
+			strJSON = new Gson().toJson(asiakkaat);
+		} else if (asiakas_id != null) {
+			Asiakas asiakas = dao.getItem(Integer.parseInt(asiakas_id));
+			strJSON = new Gson().toJson(asiakas);
 		} else {
 			asiakkaat = dao.getAllItems();
+			strJSON = new Gson().toJson(asiakkaat);
 		}
 		response.setContentType("application/json; charset=UTF-8");
-		response.getWriter().println(new Gson().toJson(asiakkaat));
+		response.getWriter().println(strJSON);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -52,14 +63,23 @@ public class Asiakkaat extends HttpServlet {
 
 	protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//System.out.println("Asiakkaat.doPut()");
+		Dao dao = new Dao();
+		String strJSONInput = request.getReader().lines().collect(Collectors.joining());
+		Asiakas asiakas = new Gson().fromJson(strJSONInput, Asiakas.class);
+		response.setContentType("application/json; charset=UTF-8");
+		if (dao.changeItem(asiakas)) {
+			response.getWriter().println("{\"response\":1}");
+		} else {
+			response.getWriter().println("{\"response\":0}");
+		}
 	}
 
 	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//System.out.println("Asiakkaat.doDelete()");
 		Dao dao = new Dao();
-		int id = Integer.parseInt(request.getParameter("id"));
+		int asiakas_id = Integer.parseInt(request.getParameter("asiakas_id"));
 		response.setContentType("application/json; charset=UTF-8");
-		if (dao.removeItem(id)) {
+		if (dao.removeItem(asiakas_id)) {
 			response.getWriter().println("{\"response\":1}");
 		} else {
 			response.getWriter().println("{\"response\":0}");

@@ -5,10 +5,11 @@
 <head>
 <meta charset="UTF-8">
 <script src="script/main.js"></script>
+<script src="script/io.js"></script>
 <link rel="stylesheet" href="css/tyylit.css">
 <title>Asiakkaat</title>
 </head>
-<body>
+<body onload="asetaFocus('hakusana')" onkeydown="tutkiKey(event, 'listaa')">
 <table id="asiakkaat">
 	<thead>
 		<tr>

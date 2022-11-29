@@ -14,7 +14,7 @@ public class Dao {
 	private ResultSet rs = null;
 	private PreparedStatement stmtPrep = null;
 	private String db = "Myynti.sqlite";
-	
+
 	private Connection yhdista() {
 		String path = System.getProperty("catalina.base");
 		String url = "jdbc:sqlite:" + path.substring(0, path.indexOf(".metadata")).replace("\\", "/") + db;
@@ -28,7 +28,7 @@ public class Dao {
 		}
 		return con;
 	}
-	
+
 	private void sulje() {
 		if (stmtPrep != null) {
 			try {
@@ -53,7 +53,33 @@ public class Dao {
 			}
 		}
 	}
-	
+
+	public Asiakas getItem(int asiakas_id) {
+		Asiakas asiakas = null;
+		try {
+			con = yhdista();
+			if (con != null) {
+				stmtPrep = con.prepareStatement("SELECT * FROM asiakkaat WHERE asiakas_id=?");
+				stmtPrep.setInt(1, asiakas_id);
+        		rs = stmtPrep.executeQuery();
+        		if (rs.isBeforeFirst()) {
+        			rs.next();
+					asiakas = new Asiakas();
+					asiakas.setAsiakas_id(rs.getInt("asiakas_id"));
+					asiakas.setEtunimi(rs.getString("etunimi"));
+					asiakas.setSukunimi(rs.getString("sukunimi"));
+					asiakas.setPuhelin(rs.getString("puhelin"));
+					asiakas.setSposti(rs.getString("sposti"));
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			sulje();
+		}
+		return asiakas;
+	}
+
 	public ArrayList<Asiakas> getAllItems() {
 		ArrayList<Asiakas> asiakkaat = new ArrayList<Asiakas>();
 		try {
@@ -80,7 +106,7 @@ public class Dao {
 		}
 		return asiakkaat;
 	}
-	
+
 	public ArrayList<Asiakas> getAllItems(String hakusana) {
 		ArrayList<Asiakas> asiakkaat = new ArrayList<Asiakas>();
 		try {
@@ -109,7 +135,7 @@ public class Dao {
 		}
 		return asiakkaat;
 	}
-	
+
 	public boolean addItem(Asiakas asiakas) {
 		boolean lisatty = false;
 		try {
@@ -122,7 +148,7 @@ public class Dao {
 				stmtPrep.setString(4, asiakas.getSposti());
 				stmtPrep.executeUpdate();
 				lisatty = true;
-			}			
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -130,14 +156,36 @@ public class Dao {
 		}
 		return lisatty;
 	}
-	
-	public boolean removeItem(int id) {
+
+	public boolean changeItem(Asiakas asiakas) {
+		boolean paivitetty = false;
+		try {
+			con = yhdista();
+			if (con != null) {
+				stmtPrep=con.prepareStatement("UPDATE asiakkaat SET etunimi=?, sukunimi=?, puhelin=?, sposti=? WHERE asiakas_id=?");
+				stmtPrep.setString(1, asiakas.getEtunimi());
+				stmtPrep.setString(2, asiakas.getSukunimi());
+				stmtPrep.setString(3, asiakas.getPuhelin());
+				stmtPrep.setString(4, asiakas.getSposti());
+				stmtPrep.setInt(5, asiakas.getAsiakas_id());
+				stmtPrep.executeUpdate();
+				paivitetty = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			sulje();
+		}
+		return paivitetty;
+	}
+
+	public boolean removeItem(int asiakas_id) {
 		boolean poistettu = false;
 		try {
 			con = yhdista();
 			if (con != null) {
 				stmtPrep = con.prepareStatement("DELETE FROM asiakkaat WHERE asiakas_id=?");
-				stmtPrep.setInt(1, id);
+				stmtPrep.setInt(1, asiakas_id);
 				stmtPrep.executeUpdate();
 				poistettu = true;
 			}
