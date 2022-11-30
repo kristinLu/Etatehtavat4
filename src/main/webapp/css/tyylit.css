@@ -45,3 +45,18 @@ a {
 	text-decoration: underline;
 	cursor: pointer;
 }
+
+#loginDiv {
+	width: 260px;
+	margin: auto;
+	margin-top: 10vh;
+	padding: 20px;
+	border: 1px solid;
+	border-radius: 10px;
+}
+
+label {
+	display: block;
+	float: left;
+	width: 80px;
+}

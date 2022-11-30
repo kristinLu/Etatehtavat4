@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.google.gson.Gson;
 
@@ -25,6 +26,10 @@ public class Asiakkaat extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//System.out.println("Asiakkaat.doGet()");
+		HttpSession session = request.getSession(true);
+		if (session.getAttribute("kayttaja") == null) {
+			return;
+		}
 		Dao dao = new Dao();
 		ArrayList<Asiakas> asiakkaat;
 		String hakusana = request.getParameter("hakusana");
@@ -50,6 +55,10 @@ public class Asiakkaat extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//System.out.println("Asiakkaat.doPost()");
+		HttpSession session = request.getSession(true);
+		if (session.getAttribute("kayttaja") == null) {
+			return;
+		}
 		Dao dao = new Dao();
 		String strJSONInput = request.getReader().lines().collect(Collectors.joining());
 		Asiakas asiakas = new Gson().fromJson(strJSONInput, Asiakas.class);
@@ -63,6 +72,10 @@ public class Asiakkaat extends HttpServlet {
 
 	protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//System.out.println("Asiakkaat.doPut()");
+		HttpSession session = request.getSession(true);
+		if (session.getAttribute("kayttaja") == null) {
+			return;
+		}
 		Dao dao = new Dao();
 		String strJSONInput = request.getReader().lines().collect(Collectors.joining());
 		Asiakas asiakas = new Gson().fromJson(strJSONInput, Asiakas.class);
@@ -76,6 +89,10 @@ public class Asiakkaat extends HttpServlet {
 
 	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//System.out.println("Asiakkaat.doDelete()");
+		HttpSession session = request.getSession(true);
+		if (session.getAttribute("kayttaja") == null) {
+			return;
+		}
 		Dao dao = new Dao();
 		int asiakas_id = Integer.parseInt(request.getParameter("asiakas_id"));
 		response.setContentType("application/json; charset=UTF-8");

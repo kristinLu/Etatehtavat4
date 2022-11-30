@@ -1,3 +1,4 @@
+<%@ include file="header.jsp" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -13,12 +14,13 @@
 <table id="asiakkaat">
 	<thead>
 		<tr>
-			<th class="oikea" colspan="5"><a href="lisaaasiakas.jsp">Lisää uusi asiakas</a></th>
+			<th colspan="3"><a href="Login?logout=1">Kirjaudu ulos (<%out.print(session.getAttribute("kayttaja"));%>)</a></th>
+			<th class="oikea" colspan="2"><a href="lisaaasiakas.jsp">Lisää uusi asiakas</a></th>
 		</tr>
 		<tr>
 			<th class="oikea" colspan="2">Hakusana:</th>
 			<th colspan="2"><input type="text" id="hakusana"></th>
-			<th><input type="button" value="Hae" id="hakunappi" onclick="haeAsiakkaat()"></th>
+			<th><input type="button" value="Hae" id="hakunappi" onclick="haeAsiakkaat(), asetaFocus('hakusana')"></th>
 		</tr>
 		<tr>
 			<th>Etunimi</th>

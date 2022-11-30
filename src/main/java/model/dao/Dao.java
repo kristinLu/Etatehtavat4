@@ -17,7 +17,8 @@ public class Dao {
 
 	private Connection yhdista() {
 		String path = System.getProperty("catalina.base");
-		String url = "jdbc:sqlite:" + path.substring(0, path.indexOf(".metadata")).replace("\\", "/") + db;
+		String url = "jdbc:sqlite:" + path + "/webapps/" + db;
+		//Eclipse url: "jdbc:sqlite:" + path.substring(0, path.indexOf(".metadata")).replace("\\", "/") + db;
 		try {
 			Class.forName("org.sqlite.JDBC");
 			con = DriverManager.getConnection(url);
@@ -112,9 +113,9 @@ public class Dao {
 		try {
 			con = yhdista();
 			if (con != null) {
-				stmtPrep = con.prepareStatement("SELECT * FROM asiakkaat WHERE etunimi LIKE ? OR sukunimi LIKE ? ORDER BY asiakas_id");
-				stmtPrep.setString(1, "%" + hakusana + "%");
-				stmtPrep.setString(2, "%" + hakusana + "%");
+				stmtPrep = con.prepareStatement("SELECT * FROM asiakkaat WHERE UPPER(etunimi) LIKE ? OR UPPER(sukunimi) LIKE ? ORDER BY asiakas_id");
+				stmtPrep.setString(1, "%" + hakusana.toUpperCase() + "%");
+				stmtPrep.setString(2, "%" + hakusana.toUpperCase() + "%");
 				rs = stmtPrep.executeQuery();
 				if (rs != null) {
 					while (rs.next()) {
@@ -195,5 +196,27 @@ public class Dao {
 			sulje();
 		}
 		return poistettu;
+	}
+	
+	public String findUser(String uid, String pwd) {
+		String nimi = null;
+		try {
+			con = yhdista();
+			if (con != null) {
+				stmtPrep = con.prepareStatement("SELECT * FROM asiakkaat WHERE sposti=? AND salasana=?");
+				stmtPrep.setString(1, uid);
+				stmtPrep.setString(2, pwd);
+        		rs = stmtPrep.executeQuery();
+        		if (rs.isBeforeFirst()) {
+        			rs.next();
+        			nimi = rs.getString("etunimi") + " " + rs.getString("sukunimi");
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			sulje();
+		}
+		return nimi;
 	}
 }
